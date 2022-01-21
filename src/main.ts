@@ -24,6 +24,7 @@ async function run(): Promise<void> {
 
     let refCreated = false;
     try {
+      core.info('Trying to create branch');
       await octokit.rest.git.createRef({
         ...repo,
         ref: `refs/heads/${branch}`,
@@ -39,6 +40,7 @@ async function run(): Promise<void> {
     }
 
     if (!refCreated) {
+      core.info('Trying to update branch');
       await octokit.rest.git.updateRef({
         ...repo,
         ref: `heads/${branch}`,

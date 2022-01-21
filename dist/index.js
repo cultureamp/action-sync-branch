@@ -54,6 +54,7 @@ function run() {
             core.info(`Fast-forwarding '${branch}' to '${commitHash}'...`);
             let refCreated = false;
             try {
+                core.info(`Trying to create branch`);
                 yield octokit.rest.git.createRef(Object.assign(Object.assign({}, repo), { ref: `refs/heads/${branch}`, sha }));
                 core.info(`Created branch ${branch}`);
                 refCreated = true;
@@ -65,6 +66,7 @@ function run() {
                 refCreated = false;
             }
             if (!refCreated) {
+                core.info(`Trying to update branch`);
                 yield octokit.rest.git.updateRef(Object.assign(Object.assign({}, repo), { ref: `heads/${branch}`, sha,
                     force }));
                 core.info(`Synced branch ${branch}`);
