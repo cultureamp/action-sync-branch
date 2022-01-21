@@ -31,6 +31,7 @@ async function run(): Promise<void> {
     } catch (error) {
       // Do nothing in the case of a createRef error, since in that case the ref exists,
       // and we'll be updating it next
+      console.log((error as Error).message);
     }
 
     await octokit.rest.git.updateRef({
