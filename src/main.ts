@@ -22,6 +22,17 @@ async function run(): Promise<void> {
 
     core.info(`Fast-forwarding '${branch}' to '${commitHash}'...`);
 
+    try {
+      await octokit.rest.git.createRef({
+        ...repo,
+        ref: `heads/${branch}`,
+        sha,
+      });
+    } catch (error) {
+      // Do nothing in the case of a createRef error, since in that case the ref exists,
+      // and we'll be updating it next
+    }
+
     await octokit.rest.git.updateRef({
       ...repo,
       ref: `heads/${branch}`,
