@@ -52,16 +52,23 @@ function run() {
             }
             const commitHash = sha.slice(0, 7);
             core.info(`Fast-forwarding '${branch}' to '${commitHash}'...`);
+            let refCreated = false;
             try {
                 yield octokit.rest.git.createRef(Object.assign(Object.assign({}, repo), { ref: `refs/heads/${branch}`, sha }));
+                core.info(`Created branch ${branch}`);
+                refCreated = true;
             }
             catch (error) {
-                // Do nothing in the case of a createRef error, since in that case the ref exists,
-                // and we'll be updating it next
-                console.log(error.message);
+                // Do nothing in the specific case of a createRef error: if the ref already exists,
+                // we'll try updating it next.
+                core.info(error.message);
+                refCreated = false;
             }
-            yield octokit.rest.git.updateRef(Object.assign(Object.assign({}, repo), { ref: `heads/${branch}`, sha,
-                force }));
+            if (!refCreated) {
+                yield octokit.rest.git.updateRef(Object.assign(Object.assign({}, repo), { ref: `heads/${branch}`, sha,
+                    force }));
+                core.info(`Synced branch ${branch}`);
+            }
         }
         catch (error) {
             core.setFailed(error.message);

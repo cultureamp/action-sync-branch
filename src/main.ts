@@ -22,24 +22,31 @@ async function run(): Promise<void> {
 
     core.info(`Fast-forwarding '${branch}' to '${commitHash}'...`);
 
+    let refCreated = false;
     try {
       await octokit.rest.git.createRef({
         ...repo,
         ref: `refs/heads/${branch}`,
         sha,
       });
+      core.info(`Created branch ${branch}`);
+      refCreated = true;
     } catch (error) {
-      // Do nothing in the case of a createRef error, since in that case the ref exists,
-      // and we'll be updating it next
-      console.log((error as Error).message);
+      // Do nothing in the specific case of a createRef error: if the ref already exists,
+      // we'll try updating it next.
+      core.info((error as Error).message);
+      refCreated = false;
     }
 
-    await octokit.rest.git.updateRef({
-      ...repo,
-      ref: `heads/${branch}`,
-      sha,
-      force,
-    });
+    if (!refCreated) {
+      await octokit.rest.git.updateRef({
+        ...repo,
+        ref: `heads/${branch}`,
+        sha,
+        force,
+      });
+      core.info(`Synced branch ${branch}`);
+    }
   } catch (error) {
     core.setFailed((error as Error).message);
   }
