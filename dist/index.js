@@ -53,7 +53,7 @@ function run() {
             const commitHash = sha.slice(0, 7);
             core.info(`Fast-forwarding '${branch}' to '${commitHash}'...`);
             try {
-                yield octokit.rest.git.createRef(Object.assign(Object.assign({}, repo), { ref: `heads/${branch}`, sha }));
+                yield octokit.rest.git.createRef(Object.assign(Object.assign({}, repo), { ref: `refs/heads/${branch}`, sha }));
             }
             catch (error) {
                 // Do nothing in the case of a createRef error, since in that case the ref exists,

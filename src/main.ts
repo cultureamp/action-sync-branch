@@ -25,7 +25,7 @@ async function run(): Promise<void> {
     try {
       await octokit.rest.git.createRef({
         ...repo,
-        ref: `heads/${branch}`,
+        ref: `refs/heads/${branch}`,
         sha,
       });
     } catch (error) {
