@@ -1,5 +1,5 @@
 #!/bin/sh -l
-set -e
+set -euxo pipefail
 
 ## Based on https://github.com/dfm/force-push-branch-action/blob/main/entrypoint.sh
 
@@ -12,4 +12,4 @@ echo $TARGET_DIRECTORY
 
 # Do it.
 git checkout $BRANCH
-git push --force https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY} ${BRANCH}
+git push --force-with-lease https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY} ${BRANCH}
