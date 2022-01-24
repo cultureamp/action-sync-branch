@@ -14,8 +14,10 @@ inputs:
     default: false
 
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  # using: 'node12'
+  # main: 'dist/index.js'
+  using: "docker"
+  image: "Dockerfile"
 
 branding:
   icon: 'refresh-cw'
