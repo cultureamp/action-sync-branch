@@ -18,6 +18,9 @@ runs:
   # main: 'dist/index.js'
   using: "docker"
   image: "Dockerfile"
+  env:
+    BRANCH: ${{ inputs.branch }}
+    TOKEN: ${{ inputs.token }}
 
 branding:
   icon: 'refresh-cw'
