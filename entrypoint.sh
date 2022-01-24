@@ -11,5 +11,12 @@ TARGET_DIRECTORY=$(mktemp -d)
 echo $TARGET_DIRECTORY
 
 # Do it.
-git checkout -b $BRANCH
-git push --force https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY} ${BRANCH}
+# git checkout -b $BRANCH # production-support
+
+git status
+git branch
+
+git checkout master
+git branch -D production-support
+git checkout -b production-support
+git push --force https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY} production-support
