@@ -21,6 +21,11 @@ echo $TARGET_DIRECTORY
 
 git checkout -b production-support
 
-git -c user.name='ca-branch-bot' -c user.email='ca-branch-bot' commit --allow-empty -m "Syncing production-support branch"
+# git -c user.name='ca-branch-bot' -c user.email='ca-branch-bot' commit --allow-empty -m "Syncing production-support branch"
+
+echo "sync" > .production-support.txt
+git add .production-support.txt
+git -c user.name='ca-branch-bot' -c user.email='ca-branch-bot' commit -m "Syncing production-support branch"
+
 
 git push --force https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY} production-support
