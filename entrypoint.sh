@@ -13,11 +13,12 @@ echo $TARGET_DIRECTORY
 # Do it.
 # git checkout -b $BRANCH # production-support
 
-git status
-git branch
+# git status
+# git branch
 
 # git checkout master
 # git branch -D production-support
+
 git checkout -b production-support
 
 git -c user.name='ca-branch-bot' -c user.email='ca-branch-bot' commit --allow-empty -m "Syncing production-support branch"
