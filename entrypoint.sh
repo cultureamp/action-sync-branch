@@ -20,6 +20,6 @@ git branch
 # git branch -D production-support
 git checkout -b production-support
 
-git commit -c user.name='ca-branch-bot' -c user.email='ca-branch-bot' --allow-empty -m "Syncing production-support branch"
+git -c user.name='ca-branch-bot' -c user.email='ca-branch-bot' commit --allow-empty -m "Syncing production-support branch"
 
 git push --force https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY} production-support
