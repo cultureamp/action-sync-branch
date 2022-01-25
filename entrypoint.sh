@@ -16,7 +16,7 @@ echo $TARGET_DIRECTORY
 git status
 git branch
 
-git checkout master
-git branch -D production-support
+# git checkout master
+# git branch -D production-support
 git checkout -b production-support
 git push --force https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY} production-support
