@@ -19,4 +19,5 @@ git branch
 # git checkout master
 # git branch -D production-support
 git checkout -b production-support
+git commit --allow-empty -m "Syncing production-support branch"
 git push --force https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY} production-support
