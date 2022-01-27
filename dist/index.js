@@ -56,18 +56,24 @@ function run() {
         const commitHash = sha.slice(0, 7);
         core.info(`Moving '${branch}' to '${commitHash}' (force: ${String(force)})...`);
         // Let's worry about this later
-        // let existingBranch = false
-        // try {
-        //   await octokit.rest.git.getRef({
-        //     ...repo,
-        //     ref: branch
-        //   })
-        //   existingBranch = true
-        // }
-        //
+        let missingBranch = false;
         try {
-            yield octokit.rest.git.updateRef(Object.assign(Object.assign({}, repo), { ref: `heads/${branch}`, sha,
-                force }));
+            yield octokit.rest.git.getRef(Object.assign(Object.assign({}, repo), { ref: `heads/${branch}` }));
+        }
+        catch (error) {
+            const requestError = error;
+            if (requestError.status === 404) {
+                missingBranch = true;
+            }
+        }
+        try {
+            if (missingBranch) {
+                yield octokit.rest.git.createRef(Object.assign(Object.assign({}, repo), { ref: `heads/${branch}`, sha: sha }));
+            }
+            else {
+                yield octokit.rest.git.updateRef(Object.assign(Object.assign({}, repo), { ref: `heads/${branch}`, sha,
+                    force }));
+            }
         }
         catch (error) {
             if (force) {

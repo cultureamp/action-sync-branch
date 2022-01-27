@@ -1,5 +1,6 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
+import { RequestError } from '@octokit/types';
 
 async function run(): Promise<void> {
   // try {
@@ -27,23 +28,34 @@ async function run(): Promise<void> {
 
   // Let's worry about this later
 
-  // let existingBranch = false
-  // try {
-  //   await octokit.rest.git.getRef({
-  //     ...repo,
-  //     ref: branch
-  //   })
-  //   existingBranch = true
-  // }
-
-  //
+  let missingBranch = false;
   try {
-    await octokit.rest.git.updateRef({
+    await octokit.rest.git.getRef({
       ...repo,
       ref: `heads/${branch}`,
-      sha,
-      force,
     });
+  } catch (error) {
+    const requestError = error as RequestError;
+    if (requestError.status === 404) {
+      missingBranch = true;
+    }
+  }
+
+  try {
+    if (missingBranch) {
+      await octokit.rest.git.createRef({
+        ...repo,
+        ref: `heads/${branch}`,
+        sha,
+      });
+    } else {
+      await octokit.rest.git.updateRef({
+        ...repo,
+        ref: `heads/${branch}`,
+        sha,
+        force,
+      });
+    }
   } catch (error) {
     if (force) {
       core.setFailed((error as Error).message);
