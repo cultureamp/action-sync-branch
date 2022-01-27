@@ -68,7 +68,7 @@ function run() {
         }
         try {
             if (missingBranch) {
-                yield octokit.rest.git.createRef(Object.assign(Object.assign({}, repo), { ref: `heads/${branch}`, sha: sha }));
+                yield octokit.rest.git.createRef(Object.assign(Object.assign({}, repo), { ref: `refs/heads/${branch}`, sha }));
             }
             else {
                 yield octokit.rest.git.updateRef(Object.assign(Object.assign({}, repo), { ref: `heads/${branch}`, sha,

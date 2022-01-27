@@ -45,7 +45,7 @@ async function run(): Promise<void> {
     if (missingBranch) {
       await octokit.rest.git.createRef({
         ...repo,
-        ref: `heads/${branch}`,
+        ref: `refs/heads/${branch}`,
         sha,
       });
     } else {
