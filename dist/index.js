@@ -64,8 +64,10 @@ function run() {
         //   })
         //   existingBranch = true
         // }
+        //
         try {
-            yield octokit.rest.git.updateRef(Object.assign(Object.assign({}, repo), { ref: `refs/heads/${branch}`, sha: sha, force: force }));
+            yield octokit.rest.git.updateRef(Object.assign(Object.assign({}, repo), { ref: `heads/${branch}`, sha,
+                force }));
         }
         catch (error) {
             if (force) {
