@@ -39,7 +39,7 @@ async function run(): Promise<void> {
   try {
     await octokit.rest.git.updateRef({
       ...repo,
-      ref: `refs/heads/${branch}`,
+      ref: `heads/${branch}`,
       sha,
       force,
     });
