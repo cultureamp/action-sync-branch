@@ -3,11 +3,14 @@ description: 'Keep a branch in sync with the current branch'
 author: 'Connor Bär'
 
 inputs:
+  token:
+    description: 'A GitHub token with permission to push to the repo. Generate one at https://github.com/settings/tokens/new?description=Sync%20Branch&scopes=repo.'
+    required: true
   branch:
     description: 'The name of the branch to sync with the current branch.'
     required: true
-  token:
-    description: 'A GitHub token with permission to push to the repo. Generate one at https://github.com/settings/tokens/new?description=Sync%20Branch&scopes=repo.'
+  sha:
+    description: 'The sha to use for syncing the branch'
     required: true
   force:
     description: 'Whether to force the update or to make sure the update is a fast-forward update. Leaving this out or setting it to false will make sure you are not overwriting work.'
