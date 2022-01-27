@@ -39,42 +39,51 @@ const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
+        // try {
+        const token = core.getInput('token');
+        const branch = core.getInput('branch');
+        const sha = core.getInput('sha');
+        const force = core.getBooleanInput('force');
+        const octokit = github.getOctokit(token);
+        const { repo } = github.context;
+        // if (ref === `refs/heads/${branch}`) {
+        //   const baseBranch = ref.replace(/^(refs\/heads\/)/, '');
+        //   core.warning(
+        //     `'${branch}' is already up to date with '${baseBranch}', skipping.`,
+        //   );
+        //   return;
+        // }
+        const commitHash = sha.slice(0, 7);
+        core.info(`Moving '${branch}' to '${commitHash}' (force: ${String(force)})...`);
+        // Let's worry about this later
+        // let existingBranch = false
+        // try {
+        //   await octokit.rest.git.getRef({
+        //     ...repo,
+        //     ref: branch
+        //   })
+        //   existingBranch = true
+        // }
         try {
-            const branch = core.getInput('branch');
-            const force = core.getBooleanInput('force');
-            const token = core.getInput('token');
-            const octokit = github.getOctokit(token);
-            const { ref, repo, sha } = github.context;
-            if (ref === `refs/heads/${branch}`) {
-                const baseBranch = ref.replace(/^(refs\/heads\/)/, '');
-                core.warning(`'${branch}' is already up to date with '${baseBranch}', skipping.`);
-                return;
-            }
-            const commitHash = sha.slice(0, 7);
-            core.info(`Fast-forwarding '${branch}' to '${commitHash}'...`);
-            let refCreated = false;
-            try {
-                core.info(`Trying to create branch`);
-                yield octokit.rest.git.createRef(Object.assign(Object.assign({}, repo), { ref: `refs/heads/${branch}`, sha }));
-                core.info(`Created branch ${branch}`);
-                refCreated = true;
-            }
-            catch (error) {
-                // Do nothing in the specific case of a createRef error: if the ref already exists,
-                // we'll try updating it next.
-                core.info(error.message);
-                refCreated = false;
-            }
-            if (!refCreated) {
-                core.info(`Trying to update branch`);
-                yield octokit.rest.git.updateRef(Object.assign(Object.assign({}, repo), { ref: `heads/${branch}`, sha,
-                    force }));
-                core.info(`Synced branch ${branch}`);
-            }
+            yield octokit.rest.git.updateRef(Object.assign(Object.assign({}, repo), { ref: `refs/heads/${branch}`, sha: sha, force: force }));
         }
         catch (error) {
-            core.setFailed(error.message);
+            if (force) {
+                core.setFailed(error.message);
+            }
+            else {
+                core.info(error.message);
+            }
         }
+        // await octokit.rest.git.createRef({
+        //   ...repo,
+        //   ref: `refs/heads/production-support/${branch}`,
+        //   sha,
+        // });
+        // core.info(`Created branch ${branch}`);
+        // } catch (error) {
+        //   core.setFailed((error as Error).message);
+        // }
     });
 }
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
